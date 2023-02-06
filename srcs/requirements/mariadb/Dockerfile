@@ -1,8 +1,8 @@
 FROM   debian:buster
 
-RUN apt-get -y update && apt-get -y upgrade
+RUN    apt-get -y update && apt-get -y upgrade
 
-RUN     apt-get -y install mariadb-server
+RUN    apt-get -y install mariadb-server
 
 COPY   ./tools/setup-maria-db.sh /usr/local/bin
 
