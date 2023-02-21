@@ -1,0 +1,25 @@
+version: '3'
+services:
+  db:
+    build: ./requirements/mariadb/
+    restart: always
+    # volumes:
+      # - db_data:/var/lib/mysql
+    # ports:
+    #   - '3306:3306'
+    networks:
+      - wpsite
+
+  adminer:
+    depends_on:
+      - db
+    build: ./requirements/bonus/adminer
+    restart: always
+    ports:
+      - '8080:8080'
+    networks:
+      - wpsite
+volumes:
+  db_data:
+networks:
+  wpsite:
