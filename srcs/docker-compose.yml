@@ -4,7 +4,7 @@ services:
     build: ./requirements/mariadb/
     restart: always
     volumes:
-      - db_data:/var/lib/mysql
+      - db-vol:/var/lib/mysql
     networks:
       - wpsite
 
@@ -14,7 +14,7 @@ services:
     build: ./requirements/bonus/adminer
     restart: always
     ports:
-      - '8080:8080'
+      - '8080:80'
     networks:
       - wpsite
 
@@ -28,6 +28,10 @@ services:
       - wpsite
 
 volumes:
-  db_data:
+  db-vol:
+    driver_opts:
+      type: 'none'
+      o: bind
+      device: /Users/$USER/data/db-data
 networks:
   wpsite:
