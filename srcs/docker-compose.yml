@@ -1,8 +1,10 @@
-version: '3'
+version: '3.3'
 services:
-  db:
+  mariadb:
+    env_file:
+      - .env
     build: ./requirements/mariadb/
-    restart: always
+    restart: on-failure
     volumes:
       - db-vol:/var/lib/mysql
     networks:
@@ -10,7 +12,7 @@ services:
 
   adminer:
     depends_on:
-      - db
+      - mariadb
     build: ./requirements/bonus/adminer
     restart: always
     ports:
@@ -19,11 +21,27 @@ services:
       - wpsite
 
   nginx:
+    depends_on:
+      - wordpress
     build: ./requirements/nginx
-    restart: always
+    restart: on-failure
+    volumes:
+      - wp-vol:/var/www/html
     ports:
       - '443:443'
-      - '8000:8000'
+    networks:
+      - wpsite
+
+  wordpress:
+    env_file:
+      - .env
+    restart: on-failure
+    depends_on:
+      - mariadb
+      - adminer
+    build: ./requirements/wordpress
+    volumes:
+      - wp-vol:/var/www/html
     networks:
       - wpsite
 
@@ -33,5 +51,12 @@ volumes:
       type: 'none'
       o: bind
       device: /Users/$USER/data/db-data
+  wp-vol:
+    driver_opts:
+      type: 'none'
+      o: bind
+      device: /Users/$USER/data/wp-data
+
 networks:
   wpsite:
+    driver: bridge

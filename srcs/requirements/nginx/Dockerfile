@@ -10,6 +10,5 @@ RUN  openssl req -x509 -newkey rsa:4096 -keyout cert.key -out cert.pem -days 365
 WORKDIR /
 
 COPY ./conf/nginx.conf /etc/nginx/
-COPY ./conf/index.html /var/www/html
 
 CMD nginx -g 'daemon off;'
