@@ -45,6 +45,20 @@ services:
     networks:
       - wpsite
 
+  ftp:
+    restart: on-failure
+    depends_on:
+      - wordpress
+    build: ./requirements/bonus/ftp
+    volumes:
+      - wp-vol:/home/xxx/ftp/
+    ports:
+      - '20:20'
+      - '21:21'
+      - '40000-40005:40000-40005'
+    networks:
+      - wpsite
+
 volumes:
   db-vol:
     driver_opts:
