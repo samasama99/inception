@@ -59,6 +59,21 @@ services:
     networks:
       - wpsite
 
+  redis:
+    restart: on-failure
+    depends_on:
+      - wordpress
+    build: ./requirements/bonus/redis
+    # volumes:
+    #   - wp-vol:/home/xxx/ftp/
+    ports:
+      - 6379:6379
+      # - '20:20'
+      # - '21:21'
+      # - '40000-40005:40000-40005'
+    networks:
+      - wpsite
+
 volumes:
   db-vol:
     driver_opts:
