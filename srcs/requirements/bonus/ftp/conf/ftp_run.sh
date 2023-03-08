@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 service vsftpd start
 
 adduser --gecos "" xxx;

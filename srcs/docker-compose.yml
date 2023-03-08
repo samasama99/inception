@@ -38,7 +38,7 @@ services:
     restart: on-failure
     depends_on:
       - mariadb
-      - adminer
+      - redis
     build: ./requirements/wordpress
     volumes:
       - wp-vol:/var/www/html
@@ -61,13 +61,13 @@ services:
 
   redis:
     restart: on-failure
-    depends_on:
-      - wordpress
+    # depends_on:
+    #   - wordpress
     build: ./requirements/bonus/redis
     # volumes:
     #   - wp-vol:/home/xxx/ftp/
-    ports:
-      - 6379:6379
+    # ports:
+    #   - 6379:6379
       # - '20:20'
       # - '21:21'
       # - '40000-40005:40000-40005'
