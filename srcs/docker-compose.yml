@@ -1,4 +1,5 @@
 version: '3.3'
+
 services:
   mariadb:
     env_file:
@@ -8,7 +9,7 @@ services:
     volumes:
       - db-vol:/var/lib/mysql
     networks:
-      - wpsite
+      - inception-network
 
   adminer:
     depends_on:
@@ -18,7 +19,7 @@ services:
     ports:
       - '8080:80'
     networks:
-      - wpsite
+      - inception-network
 
   nginx:
     depends_on:
@@ -30,7 +31,7 @@ services:
     ports:
       - '443:443'
     networks:
-      - wpsite
+      - inception-network
 
   wordpress:
     env_file:
@@ -43,7 +44,9 @@ services:
     volumes:
       - wp-vol:/var/www/html
     networks:
-      - wpsite
+      - inception-network
+    # ports:
+    #   - 3306:3306
 
   ftp:
     restart: on-failure
@@ -57,22 +60,45 @@ services:
       - '21:21'
       - '40000-40005:40000-40005'
     networks:
-      - wpsite
+      - inception-network
 
   redis:
     restart: on-failure
-    # depends_on:
-    #   - wordpress
     build: ./requirements/bonus/redis
-    # volumes:
-    #   - wp-vol:/home/xxx/ftp/
-    # ports:
-    #   - 6379:6379
-      # - '20:20'
-      # - '21:21'
-      # - '40000-40005:40000-40005'
     networks:
-      - wpsite
+      - inception-network
+
+  static:
+    restart: on-failure
+    ports:
+      - 5555:80
+    build: ./requirements/bonus/static
+    # networks:
+    #   - inception-network
+
+  gitea:
+    image: gitea/gitea:1.18.5
+    container_name: gitea
+    environment:
+      - USER_UID=1000
+      - USER_GID=1000
+      - GITEA__database__DB_TYPE=mysql
+      - GITEA__database__HOST=mariadb:3306
+      - GITEA__database__NAME=gitea
+      - GITEA__database__USER=gitea
+      - GITEA__database__PASSWD=gitea
+    restart: always
+    networks:
+      - inception-network
+    volumes:
+      - gt-vol:/data
+      # - /etc/timezone:/etc/timezone:ro
+      # - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "3000:3000"
+      - "222:22"
+    depends_on:
+      - mariadb
 
 volumes:
   db-vol:
@@ -85,7 +111,13 @@ volumes:
       type: 'none'
       o: bind
       device: /Users/$USER/data/wp-data
+  gt-vol:
+    driver_opts:
+      type: 'none'
+      o: bind
+      device: /Users/$USER/data/gt-data
+
 
 networks:
-  wpsite:
+  inception-network:
     driver: bridge

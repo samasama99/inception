@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="icon" href="web-icon.png">
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>oussama demo</title>
+</head>
+
+<body>
+
+    <aside>
+        <figure>
+            <div id="avatar"></div>
+            <figcaption>Oussama Demo</figcaption>
+        </figure>
+        <img src="MENU.png">
+        <nav>
+            <ul>
+                <li><a href="#"><strong>Home</strong></a></li>
+                <li><a href="#">About me</a></li>
+                <li><a href="#">Portfolio</a></li>
+                <li><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <main>
+        <h1>Learning Web Design</h1>
+        <p>Design a prototype and turn it into a real website</p>
+        <p class="text"> , cool Isn't it !</p>
+        <a href="../index.html" class="cta">My Projects</a>
+
+    </main>
+
+
+
+    <script>
+
+        (function () {
+            var menu = document.querySelector('ul'),
+                menulink = document.querySelector('img');
+
+            menulink.addEventListener('click', function (e) {
+                menu.classList.toggle('active');
+                e.preventDefault();
+            });
+        })();
+
+    </script>
+</body>
+
+</html>
