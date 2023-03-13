@@ -11,93 +11,79 @@ services:
     networks:
       - inception-network
 
-  # adminer:
-  #   depends_on:
-  #     - mariadb
-  #   build: ./requirements/bonus/adminer
-  #   restart: always
-  #   ports:
-  #     - '8080:80'
-  #   networks:
-  #     - inception-network
-
-  # nginx:
-  #   depends_on:
-  #     - wordpress
-  #   build: ./requirements/nginx
-  #   restart: on-failure
-  #   volumes:
-  #     - wp-vol:/var/www/html
-  #   ports:
-  #     - '443:443'
-  #   networks:
-  #     - inception-network
-
-  # wordpress:
-  #   env_file:
-  #     - .env
-  #   restart: on-failure
-  #   depends_on:
-  #     - mariadb
-  #     - redis
-  #   build: ./requirements/wordpress
-  #   volumes:
-  #     - wp-vol:/var/www/html
-  #   networks:
-  #     - inception-network
-  #   # ports:
-  #   #   - 3306:3306
-
-  # ftp:
-  #   restart: on-failure
-  #   depends_on:
-  #     - wordpress
-  #   build: ./requirements/bonus/ftp
-  #   volumes:
-  #     - wp-vol:/home/xxx/ftp/
-  #   ports:
-  #     - '20:20'
-  #     - '21:21'
-  #     - '40000-40005:40000-40005'
-  #   networks:
-  #     - inception-network
-
-  # redis:
-  #   restart: on-failure
-  #   build: ./requirements/bonus/redis
-  #   networks:
-  #     - inception-network
-
-  # static:
-  #   restart: on-failure
-  #   ports:
-  #     - 5555:80
-  #   build: ./requirements/bonus/static
-  #   # networks:
-  #   #   - inception-network
-
-  gitea:
-    build: ./requirements/bonus/gitea
-    # environment:
-    #   - USER_UID=1000
-    #   - USER_GID=1000
-    #   - GITEA__database__DB_TYPE=mysql
-    #   - GITEA__database__HOST=mariadb:3306
-    #   - GITEA__database__NAME=gitea
-    #   - GITEA__database__USER=gitea
-    #   - GITEA__database__PASSWD=gitea
-    restart: always
-    networks:
-      - inception-network
-    volumes:
-      - gt-vol:/data
-      # - /etc/timezone:/etc/timezone:ro
-      # - /etc/localtime:/etc/localtime:ro
-    ports:
-      - "3000:3000"
-      # - "222:22"
+  adminer:
     depends_on:
       - mariadb
+    build: ./requirements/bonus/adminer
+    restart: always
+    ports:
+      - '8080:80'
+    networks:
+      - inception-network
+
+  nginx:
+    depends_on:
+      - wordpress
+    build: ./requirements/nginx
+    restart: on-failure
+    volumes:
+      - wp-vol:/var/www/html
+    ports:
+      - '443:443'
+    networks:
+      - inception-network
+
+  wordpress:
+    env_file:
+      - .env
+    restart: on-failure
+    depends_on:
+      - mariadb
+      - redis
+    build: ./requirements/wordpress
+    volumes:
+      - wp-vol:/var/www/html
+    networks:
+      - inception-network
+
+  ftp:
+    restart: on-failure
+    depends_on:
+      - wordpress
+    build: ./requirements/bonus/ftp
+    volumes:
+      - wp-vol:/home/xxx/ftp/
+    ports:
+      - '20:20'
+      - '21:21'
+      - '40000-40005:40000-40005'
+    networks:
+      - inception-network
+
+  redis:
+    restart: on-failure
+    build: ./requirements/bonus/redis
+    networks:
+      - inception-network
+
+  static:
+    restart: on-failure
+    ports:
+      - 5555:80
+    build: ./requirements/bonus/static
+  
+  cadvisor:
+    build: ./requirements/bonus/cadvisor
+    volumes:
+      - /:/rootfs:ro 
+      - /var/run:/var/run:ro 
+      - /sys:/sys:ro 
+      - /var/lib/docker/:/var/lib/docker:ro 
+      - /dev/disk/:/dev/disk:ro 
+    ports:
+      - 9999:8080
+    networks:
+      - inception-network
 
 volumes:
   db-vol:
@@ -110,12 +96,6 @@ volumes:
       type: 'none'
       o: bind
       device: /Users/$USER/data/wp-data
-  gt-vol:
-    driver_opts:
-      type: 'none'
-      o: bind
-      device: /Users/$USER/data/gt-data
-
 
 networks:
   inception-network:
