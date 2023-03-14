@@ -19,8 +19,8 @@ wp config create --dbhost="mariadb" --dbname=wordpress --dbuser=wordpress --dbpa
     define('WP_REDIS_PORT', 6379);
 _EOF
 
-wp core install --url="https://localhost" --title="1337" --admin_name=wordpress --admin_password=pass --admin_email=you@example.com --path="/var/www/html" --allow-root
-# wp core install --url=orahmoun.42.fr --title="1337" --admin_name=wordpress --admin_password=pass --admin_email=you@example.com --path=var/www/html --allow-root
+# wp core install --url="https://localhost" --title="1337" --admin_name=wordpress --admin_password=pass --admin_email=you@example.com --path="/var/www/html" --allow-root
+wp core install --url="https://orahmoun.42.fr" --title="1337" --admin_name=wordpress --admin_password=pass --admin_email=you@example.com --path="var/www/html" --allow-root
 wp user create orahmoun wordpress@gmail.com --user_pass=pass --role=author --allow-root --path="/var/www/html/"
 
 service php7.3-fpm start

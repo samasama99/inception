@@ -1,17 +1,15 @@
 all : run
 
 run :
-	@-mkdir -p ${HOME}/data/db-data
-	@-mkdir -p ${HOME}/data/wp-data
-	docker-compose  -f  ./srcs/docker-compose.yml up --build
+	@sudo mkdir -p /home/orahmoun/data/db-data
+	@sudo mkdir -p /home/orahmoun/data/wp-data
+	sudo docker compose  -f  ./srcs/docker-compose.yml up --build
 
 
 clean:
-	@-docker-compose -f ./srcs/docker-compose.yml down --remove-orphans
+	@-sudo docker compose -f ./srcs/docker-compose.yml down -v
 
 fclean: clean
-	@-rm -rf ${HOME}/data
-	@-docker volume rm $$(docker volume ls -q)
-	@-docker network rm $$(docker network ls -q)
+	@-sudo rm -rf /home/orahmoun/data
 
 re: fclean all

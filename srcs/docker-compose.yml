@@ -90,12 +90,12 @@ volumes:
     driver_opts:
       type: 'none'
       o: bind
-      device: /Users/$USER/data/db-data
+      device: /home/orahmoun/data/db-data
   wp-vol:
     driver_opts:
       type: 'none'
       o: bind
-      device: /Users/$USER/data/wp-data
+      device: /home/orahmoun/data/wp-data
 
 networks:
   inception-network:
