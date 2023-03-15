@@ -1,14 +1,11 @@
-FROM debian:buster
+FROM debian:buster-slim
 
-RUN  apt-get -y update &&  apt-get -y upgrade
-RUN  apt-get -y install nginx
-RUN  apt-get -y install vim curl
-RUN  apt-get -y install openssl
-RUN  mkdir ssl_cert
-WORKDIR /ssl_cert
-RUN  openssl req -x509 -newkey rsa:4096 -keyout cert.key -out cert.pem -days 365 -nodes -subj "/C=MA/ST=none/L=KH/O=My Organization/CN=orahmoun.42.fr"
-WORKDIR /
+RUN apt-get update && apt-get install -y nginx curl openssl && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /ssl_cert && \
+    openssl req -x509 -newkey rsa:4096 -keyout /ssl_cert/cert.key -out /ssl_cert/cert.pem -days 365 -nodes -subj "/C=MA/ST=none/L=KH/O=My Organization/CN=orahmoun.42.fr"
 
 COPY ./conf/nginx.conf /etc/nginx/
 
-CMD nginx -g 'daemon off;'
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

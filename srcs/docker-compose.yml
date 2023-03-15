@@ -2,41 +2,59 @@ version: '3.3'
 
 services:
   mariadb:
+    container_name: mariadb
+    image: mariadb
+    hostname: mariadb
     env_file:
       - .env
     build: ./requirements/mariadb/
-    restart: on-failure
     volumes:
       - db-vol:/var/lib/mysql
     networks:
       - inception-network
+    restart:
+      on-failure
+    healthcheck:
+      test: ["CMD", "mysqladmin", "-uroot", "-p${DB_ROOT_PASS}", "ping", "--silent"]
+      timeout: 10s
+      retries: 3
 
   adminer:
+    container_name: adminer
+    image: adminer
+    hostname: adminer
     depends_on:
       - mariadb
     build: ./requirements/bonus/adminer
-    restart: always
     ports:
       - '8080:80'
+    restart:
+      on-failure
     networks:
       - inception-network
 
   nginx:
+    container_name: nginx
+    image: nginx
+    hostname: nginx
     depends_on:
       - wordpress
     build: ./requirements/nginx
-    restart: on-failure
     volumes:
       - wp-vol:/var/www/html
     ports:
       - '443:443'
+    restart:
+      on-failure
     networks:
       - inception-network
 
   wordpress:
+    container_name: wordpress
+    image: wordpress
+    hostname: wordpress
     env_file:
       - .env
-    restart: on-failure
     depends_on:
       - mariadb
       - redis
@@ -45,14 +63,25 @@ services:
       - wp-vol:/var/www/html
     networks:
       - inception-network
+    restart:
+      on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
   ftp:
-    restart: on-failure
+    container_name: ftp
+    image: ftp
+    hostname: ftp
     depends_on:
       - wordpress
     build: ./requirements/bonus/ftp
     volumes:
       - wp-vol:/home/xxx/ftp/
+    restart:
+      on-failure
     ports:
       - '20:20'
       - '21:21'
@@ -61,18 +90,35 @@ services:
       - inception-network
 
   redis:
-    restart: on-failure
+    container_name: redis
+    image: redis
+    hostname: redis
     build: ./requirements/bonus/redis
+    restart:
+      on-failure
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      timeout: 10s
+      retries: 3
     networks:
       - inception-network
 
   static:
-    restart: on-failure
+    container_name: static
+    image: static
+    hostname: static
+    restart:
+      on-failure
     ports:
       - 5555:80
     build: ./requirements/bonus/static
   
   cadvisor:
+    container_name: cadvisor
+    image: cadvisor
+    hostname: cadvisor
+    restart:
+      on-failure
     build: ./requirements/bonus/cadvisor
     volumes:
       - /:/rootfs:ro 
@@ -90,12 +136,12 @@ volumes:
     driver_opts:
       type: 'none'
       o: bind
-      device: /home/orahmoun/data/db-data
+      device: /Users/orahmoun/data/db-data
   wp-vol:
     driver_opts:
       type: 'none'
       o: bind
-      device: /home/orahmoun/data/wp-data
+      device: /Users/orahmoun/data/wp-data
 
 networks:
   inception-network:

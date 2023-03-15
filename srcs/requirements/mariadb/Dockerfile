@@ -1,9 +1,9 @@
-FROM   debian:buster
+FROM debian:buster-slim
 
-RUN    apt-get -y update && apt-get -y upgrade
+RUN apt-get update && apt-get install -y mariadb-server && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN    apt-get -y install mariadb-server
+COPY ./tools/setup-mariadb.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/setup-mariadb.sh
 
-COPY   ./tools/setup-mariadb.sh /usr/local/bin
-
-CMD    bash /usr/local/bin/setup-mariadb.sh
+ENTRYPOINT ["bash", "/usr/local/bin/setup-mariadb.sh"]

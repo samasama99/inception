@@ -1,10 +1,12 @@
-FROM debian:buster
+FROM debian:buster-slim
 
-RUN  apt-get -y update &&  apt-get -y upgrade
-RUN  apt-get -y install nginx
+RUN apt-get update && \
+    apt-get install -y nginx && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /var/www/html/*
 
-RUN  rm /var/www/html/*
-ADD  ./conf/Documents /var/www/html/Documents 
-COPY ./conf/index.html /var/www/html
+COPY ./conf/Documents /var/www/html/Documents 
+COPY ./conf/index.html /var/www/html/
 
-CMD nginx -g 'daemon off;'
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

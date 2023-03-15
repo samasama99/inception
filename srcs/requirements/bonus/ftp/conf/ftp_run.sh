@@ -1,17 +1,17 @@
 #!/bin/bash
 
-service vsftpd start
+# service vsftpd start
 
-adduser --gecos "" xxx;
+adduser --gecos "" ${FTP_USER};
 
-echo "xxx:xxx" | chpasswd;
+echo "${FTP_USER}:${FTP_USER_PASS}" | chpasswd;
 
-mkdir -p /home/xxx/ftp/;
+mkdir -p /home/${FTP_USER}/ftp/;
 
-chown -R "xxx:xxx" /home/xxx/;
+chown -R "${FTP_USER}:${FTP_USER}" /home/${FTP_USER}/;
 
-echo "xxx" >> /etc/vsftpd.userlist
+echo "${FTP_USER}" >> /etc/vsftpd.userlist
 
-service vsftpd stop
+# service vsftpd stop
 
-vsftpd
+exec vsftpd
