@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# service vsftpd start
+service vsftpd start
 
 adduser --gecos "" ${FTP_USER};
 
@@ -12,6 +12,6 @@ chown -R "${FTP_USER}:${FTP_USER}" /home/${FTP_USER}/;
 
 echo "${FTP_USER}" >> /etc/vsftpd.userlist
 
-# service vsftpd stop
+service vsftpd stop
 
 exec vsftpd

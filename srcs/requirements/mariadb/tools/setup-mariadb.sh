@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ -z "$DB_NAME" ] || [ -z "$DB_USER" ] || [ -z "$DB_USER_PASS" ]; then
+    echo "Error: One or more required environment variables are not set"
+    exit 1
+fi
+
 sed -i "s/127.0.0.1/0.0.0.0/g" /etc/mysql/mariadb.conf.d/50-server.cnf
 
 service mysql start
