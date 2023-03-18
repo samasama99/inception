@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -z "$DB_NAME" ] || [ -z "$DB_USER" ] || [ -z "$DB_USER_PASS" ]; then
+if [ -z "$DB_NAME" ] || [ -z "$DB_USER" ] || [ -z "$DB_USER_PASS" ] || [ -z "$DB_ROOT_PASS" ]; then
     echo "Error: One or more required environment variables are not set"
     exit 1
 fi

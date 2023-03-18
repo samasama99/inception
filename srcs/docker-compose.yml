@@ -1,5 +1,4 @@
 version: '3.3'
-
 services:
   mariadb:
     container_name: mariadb
@@ -9,16 +8,20 @@ services:
       - .env
     build: ./requirements/mariadb/
     volumes:
-      - db-vol:/var/lib/mysql
+      - 'db-vol:/var/lib/mysql'
     networks:
       - inception-network
-    restart:
-      on-failure
+    restart: always
     healthcheck:
-      test: ["CMD", "mysqladmin", "-uroot", "-p${DB_ROOT_PASS}", "ping", "--silent"]
+      test:
+        - CMD
+        - mysqladmin
+        - '-uroot'
+        - '-p${DB_ROOT_PASS}'
+        - ping
+        - '--silent'
       timeout: 10s
       retries: 3
-
   adminer:
     container_name: adminer
     image: adminer
@@ -28,11 +31,9 @@ services:
     build: ./requirements/bonus/adminer
     ports:
       - '8080:80'
-    restart:
-      on-failure
+    restart: on-failure
     networks:
       - inception-network
-
   nginx:
     container_name: nginx
     image: nginx
@@ -40,17 +41,15 @@ services:
     depends_on:
       - wordpress
     environment:
-      - DOMAIN_NAME=${DOMAIN_NAME}
+      - 'DOMAIN_NAME=${DOMAIN_NAME}'
     build: ./requirements/nginx
     volumes:
-      - wp-vol:/var/www/html
+      - 'wp-vol:/var/www/html'
     ports:
       - '443:443'
-    restart:
-      on-failure
+    restart: on-failure
     networks:
       - inception-network
-
   wordpress:
     container_name: wordpress
     image: wordpress
@@ -62,17 +61,19 @@ services:
       - redis
     build: ./requirements/wordpress
     volumes:
-      - wp-vol:/var/www/html
+      - 'wp-vol:/var/www/html'
     networks:
       - inception-network
-    restart:
-      on-failure
+    restart: on-failure
     healthcheck:
-      test: ["CMD", "curl", "-fk", "https://nginx"]
+      test:
+        - CMD
+        - curl
+        - '-fk'
+        - 'https://nginx'
       interval: 30s
       timeout: 10s
       retries: 3
-
   ftp:
     container_name: ftp
     image: ftp
@@ -83,69 +84,63 @@ services:
       - wordpress
     build: ./requirements/bonus/ftp
     volumes:
-      - wp-vol:/home/xxx/ftp/
-    restart:
-      on-failure
+      - 'wp-vol:/home/xxx/ftp/'
+    restart: on-failure
     ports:
       - '20:20'
       - '21:21'
       - '40000-40005:40000-40005'
     networks:
       - inception-network
-
   redis:
     container_name: redis
     image: redis
     hostname: redis
     build: ./requirements/bonus/redis
-    restart:
-      on-failure
+    restart: on-failure
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test:
+        - CMD
+        - redis-cli
+        - ping
       timeout: 10s
       retries: 3
     networks:
       - inception-network
-
   static:
     container_name: static
     image: static
     hostname: static
-    restart:
-      on-failure
+    restart: on-failure
     ports:
-      - 5555:80
+      - '5555:80'
     build: ./requirements/bonus/static
-  
   cadvisor:
     container_name: cadvisor
     image: cadvisor
     hostname: cadvisor
-    restart:
-      on-failure
+    restart: on-failure
     build: ./requirements/bonus/cadvisor
     volumes:
-      - /:/rootfs:ro 
-      - /var/run:/var/run:ro 
-      - /sys:/sys:ro 
-      - /var/lib/docker/:/var/lib/docker:ro 
-      - /dev/disk/:/dev/disk:ro 
+      - '/:/rootfs:ro'
+      - '/var/run:/var/run:ro'
+      - '/sys:/sys:ro'
+      - '/var/lib/docker/:/var/lib/docker:ro'
+      - '/dev/disk/:/dev/disk:ro'
     ports:
-      - 9999:8080
+      - '9999:8080'
     networks:
       - inception-network
-
 volumes:
   db-vol:
     driver_opts:
-      type: 'local'
+      type: 'none'
       o: bind
-      device: ${DB_DATA_PATH}
+      device: '${DB_DATA_PATH}'
   wp-vol:
     driver_opts:
-      type: 'local'
+      type: 'none'
       o: bind
-      device: ${WP_DATA_PATH}
-
+      device: '${WP_DATA_PATH}'
 networks:
-  inception-network:
+  inception-network: null
