@@ -15,7 +15,8 @@ run :
 
 
 clean:
-	@-sudo docker compose -f ./srcs/docker-compose.yml down -v --remove-orphans --timeout 30
+	@-sudo docker-compose -f ${DOCKER_COMPOSE} down -v --remove-orphans --timeout 30
+	@-sudo docker volume rm $$(sudo docker volume ls -q)
 
 fclean: clean
 	@-sudo rm -rf ${DATA_PATH}

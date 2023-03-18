@@ -6,6 +6,7 @@ if [ -z "$DB_NAME" ] || [ -z "$DB_USER" ] || [ -z "$DB_USER_PASS" ] || [ -z "$RE
 fi
 
 mkdir -p /var/www/html
+chown -R www-data:www-data /var/www/html
 
 sed -i -e 's/listen =.*/listen = 9000/g' /etc/php/7.3/fpm/pool.d/www.conf
 
@@ -24,4 +25,5 @@ wp redis enable --path=/var/www/html --allow-root
 
 service php7.3-fpm start
 service php7.3-fpm stop
+chown -R www-data:www-data /var/www/html
 exec php-fpm7.3 -F
