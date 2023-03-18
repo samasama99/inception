@@ -143,4 +143,4 @@ volumes:
       o: bind
       device: '${WP_DATA_PATH}'
 networks:
-  inception-network: null
+  inception-network:
