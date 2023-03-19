@@ -10,8 +10,8 @@ run :
 	@-sudo mkdir -p ${WP_VOL}
 	@-export DOCKER_BUILDKIT=1
 	@-export BUILD_CACHE=true
-	sudo docker-compose  -f  ${DOCKER_COMPOSE} build --force-rm --compress --parallel -d
-	sudo docker-compose  -f  ${DOCKER_COMPOSE} up
+	sudo docker-compose  -f  ${DOCKER_COMPOSE} build --force-rm --compress --parallel
+	sudo docker-compose  -f  ${DOCKER_COMPOSE} up -d
 
 
 clean:

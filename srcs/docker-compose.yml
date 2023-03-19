@@ -121,6 +121,7 @@ services:
     hostname: cadvisor
     restart: on-failure
     build: ./requirements/bonus/cadvisor
+    privileged: true
     volumes:
       - '/:/rootfs:ro'
       - '/var/run:/var/run:ro'
