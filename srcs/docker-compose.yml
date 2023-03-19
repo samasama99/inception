@@ -84,7 +84,7 @@ services:
       - wordpress
     build: ./requirements/bonus/ftp
     volumes:
-      - 'wp-vol:/home/xxx/ftp/'
+      - 'wp-vol:/home/${FTP_USER}/ftp/'
     restart: on-failure
     ports:
       - '20:20'
